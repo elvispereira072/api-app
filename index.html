@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmes do NY Times</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            font-size: 24px;
+            color: #007bff;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Filmes do NY Times</h1>
+    <ul id="articles-list"></ul>
+
+    <script>
+        const apiKey = 'CdSF2KDZGV7eKpzoI5eQdLtt0RgeAwOj'; // Substitua pela sua chave de API do NY Times
+        const url = `https://api.nytimes.com/svc/movies/v2/reviews/search.json?query=godfather&api-key=yourkey`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Dados recebidos:', data); // Verifique a estrutura dos dados no console
+                const articlesList = document.getElementById('articles-list');
+
+
+                // Verifique se há resultados e se o array não está vazio
+                if (data.results && data.results.length > 0) {
+                    data.results.forEach(article => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <h2>${article.display_title || 'Título não disponível'}</h2>
+                            <p>${article.summary_short || 'Resumo não disponível'}</p>
+                            <a href="${article.link ? article.link.url : '#'}" target="_blank">Leia mais</a>
+                        `;
+                        articlesList.appendChild(listItem);
+                    });
+                    
+                } else {
+                    // Se não houver artigos, exibe a mensagem apropriada
+                    articlesList.innerHTML = '<li>Nenhum artigo encontrado.</li>';
+                }
+            })
+            .catch(error => console.error('Erro ao buscar resenhas:', error));
+    </script>
+</body>
+</html>
